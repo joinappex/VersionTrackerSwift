@@ -33,9 +33,9 @@ public struct VersionTracker {
     // MARK: Private properties
 
     fileprivate var allVersions: [String: [String]]
-    public let isFirstLaunchEver: Bool
-    public let isFirstVersionLaunch: Bool
-    public let isFirstBuildLaunch: Bool
+    public var isFirstLaunchEver: Bool
+    public var isFirstVersionLaunch: Bool
+    public var isFirstBuildLaunch: Bool
 
     // MARK: Singleton
 
@@ -58,6 +58,14 @@ public struct VersionTracker {
 // MARK: - Configure
 
 extension VersionTracker {
+    public mutating func update() {
+        let version = VersionTracker.currentVersion
+        let build = VersionTracker.currentBuild
+        isFirstLaunchEver = allVersions[DefaultsKeys.versions.rawValue]!.isEmpty
+        isFirstVersionLaunch = allVersions[DefaultsKeys.versions.rawValue]!.first { $0 == version } == nil
+        isFirstBuildLaunch = allVersions[DefaultsKeys.builds.rawValue]!.first { $0 == build } == nil
+    }
+    
 
     public mutating func track() {
         let currentVersion = VersionTracker.currentVersion
